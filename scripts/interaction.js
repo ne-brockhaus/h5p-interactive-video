@@ -28,11 +28,7 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
     var title = (action.params.contentName !== undefined ? action.params.contentName : player.l10n.interaction);
 
     // Detect custom html class for interaction.
-    var classes = parameters.className;
-    if (classes === undefined) {
-      var classParts = action.library.split(' ')[0].toLowerCase().split('.');
-      classes = classParts[0] + '-' + classParts[1] + '-interaction';
-    }
+    var classes;
 
     // Keep track of content instance
     var instance;
@@ -48,6 +44,13 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
 
     // Changes if interaction has moved from original position
     var isRepositioned = false;
+
+    var getVisuals = function () {
+      return $.extend({}, {
+        backgroundColor: 'rgb(255,255,255)',
+        boxShadow: true
+      }, parameters.visuals);
+    };
 
     /**
      * Display the current interaction as a button on top of the video.
@@ -136,6 +139,97 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
     };
 
     /**
+     * Make interaction go to somewhere depending on interaction params
+     *
+     * @private
+     * @param {jQuery} $anchor Anchor element
+     * @return {JQuery} Anchor element with click functionality
+     */
+    var makeInteractionGotoClickable = function ($anchor) {
+      if (parameters.goto.type === 'timecode') {
+        $anchor.click(function (event) {
+          if (event.which === 1) {
+            goto({data: parameters.goto.time});
+          }
+        }).keypress(function (event) {
+          if (event.which === 32) {
+            goto({data: parameters.goto.time});
+          }
+        }).attr('role', 'button')
+          .attr('tabindex', '0');
+      }
+      else { // URL
+        var url = parameters.goto.url;
+        $anchor.attr({
+          href: (url.protocol !== 'other' ? url.protocol : '') + url.url,
+          target: '_blank'
+        });
+      }
+
+      return $anchor.addClass('goto-clickable');
+    };
+
+    /**
+     * Close interaction by closing dialog if the interaction is a button
+     * or through detaching the interaction otherwise
+     *
+     * @private
+     */
+    var closeInteraction = function () {
+      if (self.isButton()) {
+        player.dnb.dialog.close();
+      }
+      else {
+        $interaction.detach();
+      }
+    };
+
+    /**
+     * Create continue button for video
+     *
+     * @private
+     * @return {Element}
+     */
+    var createContinueVideoButton = function () {
+      var button = document.createElement('button');
+      button.innerHTML = player.l10n.continueWithVideo;
+      button.className = 'h5p-interaction-continue-button';
+      button.addEventListener('click', function () {
+        closeInteraction();
+        player.play();
+      });
+
+      return button;
+    };
+
+    /**
+     * Add continue button to interaction
+     *
+     * @private
+     * @param {jQuery} $parent
+     */
+    var addContinueButton = function ($parent) {
+      if (library === 'H5P.Questionnaire') {
+
+        // Check if button already exists
+        if ($parent.find('.h5p-interaction-continue-button').length) {
+          return;
+        }
+
+        var button = createContinueVideoButton();
+        var $successScreen = $parent.find('.h5p-questionnaire-success-center');
+        if ($successScreen.length) {
+          $successScreen.get(0).appendChild(button);
+        }
+
+        instance.on('noSuccessScreen', function () {
+          closeInteraction();
+          player.play();
+        });
+      }
+    };
+
+    /**
      * Opens button dialog.
      *
      * @private
@@ -145,17 +239,23 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
         instance.setActivityStarted();
       }
 
+      var isGotoClickable = self.isGotoClickable();
+
       // Create wrapper for dialog content
-      var $dialogContent = $('<div/>', {
+      var $dialogContent = $(isGotoClickable && parameters.goto.type === 'url' ? '<a>' : '<div>', {
         'class': 'h5p-dialog-interaction h5p-frame'
       });
 
       // Attach instance to dialog and open
-      instance.attach($dialogContent);
+      var $instanceParent = isGotoClickable ? makeInteractionGotoClickable($dialogContent) : $dialogContent;
+      instance.attach($instanceParent);
+      addContinueButton($instanceParent);
 
       // Open dialog
       player.dnb.dialog.open($dialogContent);
       player.dnb.dialog.addLibraryClass(library);
+      player.dnb.dialog.toggleClass('goto-clickable-visualize', !!(isGotoClickable && parameters.goto.visualize));
+      player.dnb.dialog.toggleClass('h5p-goto-timecode', !!(parameters.goto && parameters.goto.type === 'timecode'));
 
       /**
        * Handle dialog closing once.
@@ -181,6 +281,7 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
 
       /**
        * Set dialog width of interaction and unregister dialog close listener
+       * @private
        */
       var setDialogWidth = function () {
         self.dialogWidth = player.dnb.dialog.getDialogWidth();
@@ -278,20 +379,93 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
     };
 
     /**
+     * Got to a given time code provided by an event
+     *
+     * @private
+     * @param {Object} event
+     * @param {number} event.data
+     */
+    var goto = function (event) {
+      if (self.isButton()) {
+        // Close dialog
+        player.dnb.dialog.close();
+      }
+      if (player.currentState === H5P.Video.PAUSED ||
+        player.currentState === H5P.Video.ENDED) {
+        // Start playing again
+        player.play();
+      }
+
+      // Jump to chosen timecode
+      player.seek(event.data);
+    };
+
+    /**
+     * Get the dimensions for the current interaction
+     *
+     * @method getDimensions
+     * @return {Object}
+     */
+    var getDimensions = function () {
+      var height = parameters.height || 10;
+      var width = parameters.width || 10;
+
+      if (library !== 'H5P.IVHotspot') {
+        return {
+          height: height + 'em',
+          width: width + 'em'
+        };
+      }
+      else {
+        // Get original ratio of wrapper to font size of IV (default 40 x 22,5)
+        // We can not rely on measuring font size.
+        var widthRatio = player.width / player.fontSize;
+        var heightRatio = widthRatio / (player.$videoWrapper.width() / player.$videoWrapper.height());
+
+        return {
+          height: ((height / heightRatio) * 100) + '%',
+          width: ((width / widthRatio) * 100) + '%'
+        };
+      }
+    };
+
+    /**
      * Display the current interaction as a poster on top of the video.
      *
      * @private
      */
     var createPoster = function () {
+      var isGotoClickable = self.isGotoClickable();
+      var dimensions = getDimensions();
+      var visuals = getVisuals();
+
       $interaction = $('<div/>', {
-        'class': 'h5p-interaction h5p-poster ' + classes,
+        'class': 'h5p-interaction h5p-poster ' + classes + (isGotoClickable && parameters.goto.visualize ? ' goto-clickable-visualize' : ''),
         css: {
           left: parameters.x + '%',
           top: parameters.y + '%',
-          width: (parameters.width ? parameters.width : 10) + 'em',
-          height: (parameters.height ? parameters.height : 10) + 'em'
+          width: dimensions.width,
+          height: dimensions.height
         }
       });
+
+      if (library !== 'H5P.IVHotspot') {
+        // Add background
+        $interaction.css('background', visuals.backgroundColor);
+
+        // Add transparency css
+        var backgroundColors = visuals.backgroundColor.split(',');
+        if (backgroundColors[3]) {
+          var opacity = parseFloat(backgroundColors[3].replace(')', ''));
+          if (opacity === 0) {
+            $interaction.addClass('h5p-transparent-interaction');
+          }
+        }
+      }
+
+      if (visuals.boxShadow === false) {
+        $interaction.addClass('h5p-box-shadow-disabled');
+      }
 
       // Reset link interaction dimensions
       if (library === 'H5P.Link') {
@@ -312,7 +486,7 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
         'class': 'h5p-interaction-outer'
       }).appendTo($interaction);
 
-      $inner = $('<div/>', {
+      $inner = $(isGotoClickable && parameters.goto.type === 'url' ? '<a>' : '<div>', {
         'class': 'h5p-interaction-inner h5p-frame'
       }).appendTo($outer);
 
@@ -320,7 +494,9 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
         instance.disableAutoPlay();
       }
 
-      instance.attach($inner);
+      var $instanceParent = isGotoClickable ? makeInteractionGotoClickable($inner) : $inner;
+      instance.attach($instanceParent);
+      addContinueButton($instanceParent);
 
       // Trigger event listeners
       self.trigger('display', $interaction);
@@ -405,7 +581,7 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
       // add and show adaptivity button, hide continue button
       instance.hideButton('iv-continue')
         .addButton('iv-adaptivity-' + adaptivityId, adaptivityLabel, function () {
-          if (self.isButton() || player.isMobileView) {
+          if (self.isButton()) {
             player.dnb.dialog.close();
           }
           if (!adaptivity.allowOptOut) {
@@ -448,6 +624,34 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
     };
 
     /**
+     * Determine css classes for interaction
+     * @return {string} Css classes string separated by space
+     */
+    var determineClasses = function () {
+      var classes = parameters.className;
+
+      if (classes === undefined) {
+        var classParts = action.library.split(' ')[0].toLowerCase().split('.');
+        classes = classParts[0] + '-' + classParts[1] + '-interaction';
+      }
+
+      if (parameters.goto && parameters.goto.type === 'timecode') {
+        classes += ' h5p-goto-timecode';
+      }
+
+      return classes;
+    };
+
+    /**
+     * Check if interaction support linking on click
+     *
+     * @return {boolean} True if interaction has functionality for linking on click
+     */
+    self.isGotoClickable = function () {
+      return ['H5P.Text', 'H5P.Image'].indexOf(library) !== -1 && parameters.goto && ['timecode', 'url'].indexOf(parameters.goto.type) !== -1;
+    };
+
+    /**
      * Extract the current state of interactivity for serialization.
      *
      * @returns {Object}
@@ -474,7 +678,7 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
      * @returns {boolean}
      */
     self.isButton = function () {
-      return parameters.displayType === 'button' || library === 'H5P.Nil' || player.isMobileView;
+      return parameters.displayType === 'button' || library === 'H5P.Nil' || (player.isMobileView && library !== 'H5P.IVHotspot');
     };
 
     /**
@@ -497,12 +701,36 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
         return; // Skip "sub titles"
       }
 
+      var seekbarClasses = 'h5p-seekbar-interaction ' + classes;
+      if (player.preventSkipping) {
+        seekbarClasses += ' disabled';
+      }
+
       // One could also set width using ((parameters.duration.to - parameters.duration.from + 1) * player.oneSecondInPercentage)
       $('<div/>', {
-        'class': 'h5p-seekbar-interaction ' + classes,
+        'class': seekbarClasses,
         title: title,
         css: {
           left: (parameters.duration.from * player.oneSecondInPercentage) + '%'
+        },
+        on: {
+          click: function () {
+            if (player.preventSkipping) {
+              return;
+            }
+
+            if (player.currentState === H5P.Video.VIDEO_CUED) {
+              player.play();
+              player.seek(parameters.duration.from);
+            }
+            else if (player.currentState === H5P.Video.PLAYING) {
+              player.seek(parameters.duration.from);
+            } else {
+              player.play(); // for updating the slider
+              player.seek(parameters.duration.from);
+              player.pause();
+            }
+          }
         }
       }).appendTo($container);
     };
@@ -538,7 +766,7 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
         return; // Interaction already on display
       }
 
-      if (self.isButton() || player.isMobileView) {
+      if (self.isButton()) {
         createButton();
         isShownAsButton = true;
       }
@@ -577,11 +805,17 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
      * Recreate interactions. Useful when an interaction or view has changed.
      */
     self.reCreateInteraction = function () {
+
+      // Do not recreate IVHotspot since it should always be a poster
+      if (library === 'H5P.IVHotspot') {
+        return;
+      }
+
       // Only recreate existing interactions
       if ($interaction) {
         $interaction.detach();
 
-        if (self.isButton() || player.isMobileView) {
+        if (self.isButton()) {
           createButton();
           isShownAsButton = true;
         } else {
@@ -667,6 +901,7 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
      * Useful if the input parameters have changes.
      */
     self.reCreate = function () {
+      classes = determineClasses();
       if (library !== 'H5P.Nil') {
         action.params = action.params || {};
         action.params.overrideSettings = action.params.overrideSettings || {};
@@ -702,21 +937,11 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
             }
           });
 
+          if (library === 'H5P.IVHotspot') {
+            instance.on('goto', goto);
+          }
           if (library === 'H5P.GoToQuestion') {
-            instance.on('chosen', function (event) {
-              if (self.isButton()) {
-                // Close dialog
-                player.dnb.dialog.close();
-              }
-              if (player.currentState === H5P.Video.PAUSED ||
-                  player.currentState === H5P.Video.ENDED) {
-                // Start playing again
-                player.play();
-              }
-
-              // Jump to chosen timecode
-              player.seek(event.data);
-            });
+            instance.on('chosen', goto);
           }
         }
       }
@@ -775,17 +1000,13 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
 
       var instance = H5P.newRunnable(action, player.contentId);
 
-      var interactionCopyrights;
-      if (instance !== undefined && instance.getCopyrights !== undefined) {
-        interactionCopyrights = instance.getCopyrights();
-      }
-      else if (instance !== undefined) {
-        interactionCopyrights = H5P.getCopyrights(instance, parameters, player.contentId);
-      }
-      if (interactionCopyrights !== undefined) {
+      if (instance !== undefined) {
+        var interactionCopyrights = new H5P.ContentCopyrights();
+        interactionCopyrights.addContent(H5P.getCopyrights(instance, parameters, player.contentId));
         interactionCopyrights.setLabel(title + ' ' + H5P.InteractiveVideo.humanizeTime(parameters.duration.from) + ' - ' + H5P.InteractiveVideo.humanizeTime(parameters.duration.to));
         return interactionCopyrights;
       }
+
       return undefined;
     };
 
@@ -828,7 +1049,7 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
      */
     self.repositionToWrapper = function ($wrapper) {
 
-      if ($interaction) {
+      if ($interaction && library !== 'H5P.IVHotspot') {
 
         // Reset positions
         if (isRepositioned) {
@@ -837,20 +1058,11 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
             'left': parameters.x + '%'
           });
 
-          // Reset dimensions
-          var height = '';
-          var width = '';
-
-          // Posters reset to standard dimensions
-          if (!self.isButton()) {
-            height = (parameters.height ? parameters.height : 10) + 'em';
-            width = (parameters.width ? parameters.width : 10) + 'em';
-          }
-
-          $interaction.css({
-            'height': height,
-            'width': width
-          });
+          $interaction.css(self.isButton() ? {
+            // Reset dimensions
+            height: '',
+            width: ''
+          } : getDimensions()); // Posters reset to standard dimensions
 
           isRepositioned = false;
         }

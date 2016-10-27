@@ -2,17 +2,17 @@
   "semantics": [
     {
       "englishLabel": "Interactive Video Editor",
-      "label": "Éditeur de vidéo interactive",
+      "label": "Editor für interaktive Videos",
       "fields": [
         {
           "englishLabel": "Upload/embed video",
-          "label": "Envoyer/intégrer une vidéo",
+          "label": "Video hochladen/einbetten",
           "fields": [
             {
               "englishLabel": "Video files",
-              "label": "Fichiers vidéo",
+              "label": "Videodateien",
               "englishDescription": "Select the video files you wish to use in your interactive video. To ensure maximum support in browsers at least add a version of the video in webm and mp4 formats.",
-              "description": "Sélectionnez les fichiers vidéo que vous souhaitez utiliser dans votre vidéo interactive. Pour assurer une compatibilité maximale avec les navigateurs, merci d'ajouter au moins une version de la vidéo aux formats mp4 et webm."
+              "description": "Wähle die Videodateien, die in dem interaktiven Video verwendet werden sollen. Um alle Browser bestmöglich zu unterstützen, muss zumindest eine Version des Videos im webm-Format und eine im mp4-Format hinzugefügt werden."
             },
             {
               "englishLabel": "Start screen options",
@@ -20,33 +20,33 @@
               "fields": [
                 {
                   "englishLabel": "The title of this interactive video",
-                  "label": "Titre de la vidéo interactive",
+                  "label": "Der Titel dieses interaktiven Videos",
                   "englishDefault": "Interactive Video",
-                  "default": "Vidéo interactive",
+                  "default": "Interaktives Video",
                   "englishDescription": "Used in summaries, statistics etc.",
-                  "description": "Utilisé dans les récapitulatifs, statistiques, etc."
+                  "description": "Wird in Zusammenfassungen, Statistiken, etc. verwendet"
                 },
                 {
                   "englishLabel": "Hide title on video start screen",
-                  "label": "Cacher le titre sur l'écran de lancement de la vidéo"
+                  "label": "Titel auf Video-Startbildschirm ausblenden"
                 },
                 {
                   "englishLabel": "Short description (Optional)",
-                  "label": "Courte description (en option)",
+                  "label": "Kurze Beschreibung (optional)",
                   "englishDescription": "Optional. Display a short description text on the video start screen. Does not work for YouTube videos.",
-                  "description": "Afficher une courte description (facultative) sur l'écran de lancement de la vidéo. Ne fonctionne pas pour les vidéos Youtube"
+                  "description": "Optional. Blende einen kurzen Beschreibungstext auf dem Startbildschirm des Videos ein."
                 },
                 {
                   "englishLabel": "Poster image",
-                  "label": "Image de la vidéo ",
+                  "label": "Posterbild",
                   "englishDescription": "Image displayed before the user launches the video. Does not work for YouTube Videos.",
-                  "description": "Cette image est affichée avant que l'utilisateur ne lance la vidéo. Ne fonctionne pas avec les vidéos YouTube."
+                  "description": "Bild, das angezeigt wird, bevor das Video abgespielt wird. Funktioniert nicht mit YouTube-Videos."
                 },
                 {
                   "englishLabel": "Video copyright information",
-                  "label": "Informations sur le copyright de la vidéo",
+                  "label": "Video-Urheberrechtsinformationen",
                   "englishDescription": "Information regarding copyright of the video and elements used in the video.",
-                  "description": "Informations sur le copyright de la vidéo et des éléments utilisés dans la vidéo."
+                  "description": "Urheberrechtliche Informationen zum Video und zu den Elemente, die im Video verwendet werden."
                 }
               ]
             }
@@ -54,40 +54,40 @@
         },
         {
           "englishLabel": "Add interactions",
-          "label": "Ajouter des activités",
+          "label": "Interaktionen hinzufügen",
           "fields": [
             {
               "field": {
                 "fields": [
                   {
                     "englishLabel": "Display time",
-                    "label": "Plage d'apparition"
+                    "label": "Anzeigezeit"
                   },
                   {
                     "englishLabel": "Pause video",
-                    "label": "Mettre la vidéo sur pause"
+                    "label": "Video pausieren"
                   },
                   {
                     "englishLabel": "Display as",
-                    "label": "Afficher sous forme de",
+                    "label": "Anzeigen als",
                     "englishDescription": "<b>Button</b> is a collapsed interaction the user must press to open. <b>Poster</b> is an expanded interaction displayed directly on top of the video",
-                    "description": "<b>Bouton</b> : l'utilisateur doit appuyer dessus pour faire apparaître l'activité. <b>Cadre</b> : l'activité est affichée directement sous la forme d'un cadre en surimpression sur la vidéo.",
+                    "description": "<b>Button</b> ist eine eingeklappte Interaktion, die der Benutzer anklicken muss, um sie zu öffnen. <b>Poster</b> ist eine ausgeklappte Interaktion, die direkt über dem Video angezeigt wird",
                     "options": [
                       {
                         "englishLabel": "Button",
-                        "label": "Bouton"
+                        "label": "Button"
                       },
                       {
                         "englishLabel": "Poster",
-                        "label": "Cadre"
+                        "label": "Poster"
                       }
                     ]
                   },
                   {
                     "englishLabel": "Label",
-                    "label": "Intitulé du bouton",
+                    "label": "Beschriftung",
                     "englishDescription": "Label displayed next to interaction icon.",
-                    "description": "Texte affiché à côté de l'icône de l'activité."
+                    "description": "Beschriftung neben dem Interaktionssymbol."
                   },
                   {},
                   {},
@@ -96,53 +96,53 @@
                   {},
                   {
                     "englishLabel": "Adaptivity",
-                    "label": "Enchaînement",
+                    "label": "Anpassen an Antworten",
                     "fields": [
                       {
                         "englishLabel": "Action on all correct",
-                        "label": "Action si tout est juste",
+                        "label": "Aktion, wenn alles richtig",
                         "fields": [
                           {
                             "englishLabel": "Seek to",
-                            "label": "Aller à",
+                            "label": "Springe zu",
                             "englishDescription": "Enter timecode in the format M:SS",
-                            "description": "Entrer le timecode au format M:SS"
+                            "description": "Den Zeitcode im Format M:SS angeben"
                           },
                           {
                             "englishLabel": "Allow the user to opt out and continue",
-                            "label": "Autoriser les utilisateurs à passer et à continuer"
+                            "label": "Dem Benutzer erlauben, direkt weiterzumachen"
                           },
                           {
                             "englishLabel": "Message",
-                            "label": "Message à afficher"
+                            "label": "Nachricht"
                           },
                           {
                             "englishLabel": "Label for seek button",
-                            "label": "Intitulé du bouton de reprise"
+                            "label": "Beschriftung für den Springen-Button"
                           }
                         ]
                       },
                       {
                         "englishLabel": "Action on wrong",
-                        "label": "Action en cas de réponse fausse",
+                        "label": "Aktion, wenn falsch",
                         "fields": [
                           {
                             "englishLabel": "Seek to",
-                            "label": "Aller à",
+                            "label": "Springe zu",
                             "englishDescription": "Enter timecode in the format M:SS",
-                            "description": "Entrer le timecode au format M:SS"
+                            "description": "Den Zeitcode im Format M:SS angeben"
                           },
                           {
                             "englishLabel": "Allow the user to opt out and continue",
-                            "label": "Autoriser les utilisateurs à passer et à continuer"
+                            "label": "Dem Benutzer erlauben, direkt weiterzumachen"
                           },
                           {
                             "englishLabel": "Message",
-                            "label": "Message à afficher"
+                            "label": "Nachricht"
                           },
                           {
                             "englishLabel": "Label for seek button",
-                            "label": "Intitulé du bouton de reprise"
+                            "label": "Beschriftung für den Springen-Button"
                           }
                         ]
                       }
@@ -150,19 +150,19 @@
                   },
                   {
                     "englishLabel": "Visuals",
-                    "label": "Visuals",
+                    "label": "Gehe zu bei Klick",
                     "fields": [
                       {
                         "englishLabel": "Background color",
-                        "label": "Background color",
+                        "label": "Typ",
                         "englishDefault": "rgb(255, 255, 255)",
                         "default": "rgb(255, 255, 255)"
                       },
                       {
                         "englishLabel": "Box shadow",
-                        "label": "Box shadow",
+                        "label": "Gehe zu",
                         "englishDescription": "Adds a subtle shadow around the interaction. You might want to disable this for completely transparent interactions",
-                        "description": "Adds a subtle shadow around the interaction. You might want to disable this for completely transparent interactions"
+                        "description": "Der Zielzeitpunkt, zu dem der Nutzer nach Klicken auf den Hotspot springt. Gib den Timecode in der Form M:SS ein."
                       }
                     ]
                   },
@@ -238,14 +238,14 @@
         },
         {
           "englishLabel": "Summary task",
-          "label": "Récapitulatif",
+          "label": "Zusammenfassende Aufgabe",
           "fields": [
             {},
             {
               "englishLabel": "Display at",
-              "label": "Afficher à",
+              "label": "Anzeigen bei",
               "englishDescription": "Number of seconds before the video ends.",
-              "description": "Nombre de secondes avant la fin de la vidéo."
+              "description": "Anzahl der Sekunden vor Ende des Videos."
             }
           ]
         }
@@ -253,55 +253,55 @@
     },
     {
       "englishLabel": "Behavioural settings",
-      "label": "Behavioural settings",
+      "label": "Verhaltenssteuerung",
       "fields": [
         {
           "englishLabel": "Start video at",
-          "label": "Start video at",
+          "label": "Starte Video bei",
           "englishDescription": "Enter timecode in the format M:SS",
-          "description": "Enter timecode in the format M:SS"
+          "description": "Den Zeitcode im Format M:SS angeben"
         },
         {
           "englishLabel": "Override \"Show Solution\" button",
-          "label": "Ecraser le bouton \"Voir la correction\"",
+          "label": "Überschreiben des \"Lösungen anzeigen\"-Buttons",
           "englishDescription": "This option determines if the \"Show Solution\" button will be shown for all questions, disabled for all or configured for each question individually.",
-          "description": "Cette option détermine si le bouton \"Voir la correction\" sera affiché pour toutes les questions, désactivé pour toutes ou configuré pour chaque question individuellement.",
+          "description": "Diese Option gibt an, ob der \"Lösung anzeigen\"-Button für alle Fragen angezeigt, ausgeblendet oder für jede Frage individuell konfiguriert wird.",
           "options": [
             {
               "englishLabel": "Enabled",
-              "label": "Activé"
+              "label": "Anzeigen"
             },
             {
               "englishLabel": "Disabled",
-              "label": "Désactivé"
+              "label": "Ausblenden"
             }
           ]
         },
         {
           "englishLabel": "Override \"Retry\" button",
-          "label": "Ecraser le bouton \"Recommencer\"",
+          "label": "Überschreiben des \"Wiederholen\"-Buttons",
           "englishDescription": "This option determines if the \"Retry\" button will be shown for all questions, disabled for all or configured for each question individually.",
-          "description": "Cette option détermine si le bouton \"Recommencer\" sera affiché pour toutes les questions, désactivé pour toutes ou configuré pour chaque question individuellement.",
+          "description": "Diese Option gibt an, ob der \"Wiederholen\" Button für alle Fragen angezeigt, ausgeblendet oder für jede Frage individuell konfiguriert wird.",
           "options": [
             {
               "englishLabel": "Enabled",
-              "label": "Activé"
+              "label": "Anzeigen"
             },
             {
               "englishLabel": "Disabled",
-              "label": "Désactivé"
+              "label": "Ausblenden"
             }
           ]
         },
         {
           "englishLabel": "Start with bookmarks menu open",
-          "label": "Show bookmarks menu on load",
+          "label": "Zeige das Lesezeichen-Menü beim Laden",
           "englishDescription": "This function is not available on iPad when using YouTube as video source",
-          "description": "This function is not available on iPad when using YouTube as video source"
+          "description": "Diese Funktion ist auf dem iPad nicht verfügbar, wenn das Video von YouTube stammt"
         },
         {
           "englishLabel": "Show button for rewinding 10 seconds",
-          "label": "Show button for rewinding 10 seconds"
+          "label": "Zeige den Button, um 10 Sekunden zurück zu springen"
         },
         {
           "englishLabel": "Prevent skipping forward in a video",
@@ -313,91 +313,91 @@
     },
     {
       "englishLabel": "Localize",
-      "label": "Traduction de l'interface",
+      "label": "Lokalisieren",
       "fields": [
         {
           "englishLabel": "Interaction title",
-          "label": "Intitulé de l'activité",
+          "label": "Interaktionstitel",
           "englishDefault": "Interaction",
-          "default": "Activité"
+          "default": "Interaktion"
         },
         {
           "englishLabel": "Play title",
-          "label": "Intitulé \"Jouer\"",
+          "label": "Titel zum Abspielen",
           "englishDefault": "Play",
-          "default": "Jouer"
+          "default": "Start"
         },
         {
           "englishLabel": "Pause title",
-          "label": "Intitulé \"Pause\"",
+          "label": "Titel zum Pausieren",
           "englishDefault": "Pause",
           "default": "Pause"
         },
         {
           "englishLabel": "Mute title",
-          "label": "Intitulé \"Couper le son\"",
+          "label": "Titel zum Stummschalten",
           "englishDefault": "Mute",
-          "default": "Couper le son"
+          "default": "Stumm"
         },
         {
           "englishLabel": "Unmute title",
-          "label": "Intitulé \"Remettre le son\"",
+          "label": "Titel, um Stummmodus aufzuheben",
           "englishDefault": "Unmute",
-          "default": "Rétablir le son"
+          "default": "Stummschaltung aufheben"
         },
         {
           "englishLabel": "Video quality title",
-          "label": "Intitulé \"Qualité de la vidéo\"",
+          "label": "Titel für die Videoqualität",
           "englishDefault": "Video Quality",
-          "default": "Qualité de la vidéo"
+          "default": "Video-Qualität"
         },
         {
           "englishLabel": "Fullscreen title",
-          "label": "Intitulé \"Plein écran\"",
+          "label": "Titel für den Vollbildmodus",
           "englishDefault": "Fullscreen",
-          "default": "Plein écran"
+          "default": "Vollbildmodus"
         },
         {
           "englishLabel": "Exit fullscreen title",
-          "label": "Intitulé \"Sortir du plein écran\"",
+          "label": "Titel zum Verlassen des Vollbildmodus",
           "englishDefault": "Exit Fullscreen",
-          "default": "Sortir du plein écran"
+          "default": "Vollbildmodus verlassen"
         },
         {
           "englishLabel": "Summary title",
-          "label": "Intitulé du récapitulatif",
+          "label": "Titel für Zusammenfassungen",
           "englishDefault": "Summary",
-          "default": "Récapitulatif"
+          "default": "Zusammenfassung"
         },
         {
           "englishLabel": "Bookmarks title",
-          "label": "Intitulé du bouton \"Signets\"",
+          "label": "Titel für Lesezeichen",
           "englishDefault": "Bookmarks",
-          "default": "Signets"
+          "default": "Lesezeichen"
         },
         {
           "englishLabel": "Default label for adaptivity seek button",
-          "label": "Texte par défaut du bouton de reprise",
+          "label": "Standardbeschriftung für Springen-Button",
           "englishDefault": "Continue",
-          "default": "Continuer"
+          "default": "Weiter"
         },
         {
           "englishLabel": "Default label for continue video button",
-          "label": "Default label for continue video button",
+          "label": "Standardbeschriftung für Weiter-mit-dem-Video-Button",
           "englishDefault": "Continue with video",
-          "default": "Continue with video"
+          "default": "Weiter mit dem Video"
         },
         {
           "englishLabel": "Set playback rate",
-          "label": "Set playback rate",
+          "label": "Abspielgeschwindigkeit setzen",
           "englishDefault": "Playback Rate",
-          "default": "Playback Rate"
+          "default": "Abspielgeschwindigkeit"
         },
         {
           "englishLabel": "Rewind 10 Seconds",
-          "label": "Rewind 10 Seconds",
+          "label": "10 Sekunden zurückspringen",
           "englishDefault": "Rewind 10 Seconds",
-          "default": "Rewind 10 Seconds"
+          "default": "10 Sekunden zurück"
         }
       ]
     }
